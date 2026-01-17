@@ -1,74 +1,30 @@
-/* ========= CONFIG ========= */
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Realm Core V2 Mini</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-// SHA-256 Hash eines EINMAL-KEYS
-// Klartext-Key (nur zum Erzeugen): REALM-ACCESS-2026
-const validHashes = [
-  "d9a1c4c1e7c57d1c47df1cb8e7d64df9d6c6f9d0c7b6a1d4e0b9d9e5d7f1c5a1"
-];
+<h2>Realm XP Dashboard</h2>
 
-// Bereits genutzte Keys
-let usedHashes = JSON.parse(localStorage.getItem("usedHashes") || "[]");
+<div id="loginBox">
+  <input id="keyInput" placeholder="Einmal-Key eingeben">
+  <button onclick="login()">Login</button>
+  <p id="loginMsg"></p>
+</div>
 
-/* ========= LOGIN ========= */
+<div id="app" class="hidden">
+  <div id="playerList"></div>
 
-async function sha256(text) {
-  const buf = await crypto.subtle.digest(
-    "SHA-256",
-    new TextEncoder().encode(text)
-  );
-  return [...new Uint8Array(buf)]
-    .map(b => b.toString(16).padStart(2, "0"))
-    .join("");
-}
+  <div id="details" class="card hidden">
+    <h3 id="pname"></h3>
+    <div id="pxp"></div>
+    <progress id="bar" max="3000"></progress>
+  </div>
+</div>
 
-async function login() {
-  const input = document.getElementById("keyInput").value.trim();
-  const msg = document.getElementById("loginMsg");
-
-  if (!input) {
-    msg.textContent = "Key fehlt";
-    return;
-  }
-
-  const hash = await sha256(input);
-
-  if (!validHashes.includes(hash)) {
-    msg.textContent = "Ungültiger Key";
-    return;
-  }
-
-  if (usedHashes.includes(hash)) {
-    msg.textContent = "Key bereits benutzt";
-    return;
-  }
-
-  // Key verbrauchen
-  usedHashes.push(hash);
-  localStorage.setItem("usedHashes", JSON.stringify(usedHashes));
-
-  document.getElementById("loginBox").classList.add("hidden");
-  document.getElementById("app").classList.remove("hidden");
-}
-
-/* ========= APP FUNKTIONEN ========= */
-
-const players = [
-  { name: "Steve", xp: 1200 },
-  { name: "Alex", xp: 2700 }
-];
-
-const list = document.getElementById("playerList");
-
-players.forEach(p => {
-  const btn = document.createElement("button");
-  btn.textContent = p.name;
-  btn.onclick = () => showPlayer(p);
-  list.appendChild(btn);
-});
-
-function showPlayer(p) {
-  document.getElementById("details").classList.remove("hidden");
-  document.getElementById("pname").textContent = p.name;
-  document.getElementById("pxp").textContent = `XP: ${p.xp}`;
-  document.getElementById("bar").value = p.xp;
-}
+<script src="app.js"></script>
+</body>
+</html>
