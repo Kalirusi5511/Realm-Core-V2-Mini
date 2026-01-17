@@ -1,0 +1,16 @@
+body{
+  background:#0f0f0f;
+  color:#fff;
+  font-family:system-ui;
+  display:flex;
+  justify-content:center;
+  padding:20px
+}
+.card{
+  width:100%;
+  max-width:400px;
+  background:#1e1e1e;
+  padding:20px;
+  border-radius:14px
+}
+progress{width:100%}
